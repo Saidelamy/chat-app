@@ -69,7 +69,6 @@ export const signup = async (req, res) => {
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
-
   if (!email || !password) {
     return res.status(400).json({ message: "Email and password are required" });
   }
@@ -78,31 +77,38 @@ export const login = async (req, res) => {
   if (!emailRegex.test(email)) {
     return res.status(400).json({ message: "Invalid email format" });
   }
+  try {
+    const existingUser = await User.findOne({ email });
+    if (!existingUser) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
 
-  const existingUser = User.findOne({ email });
-  if (!existingUser) {
-    return res.status(400).json({ message: "Invalid credentials" });
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      existingUser.password,
+    );
+
+    if (!isPasswordCorrect) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+
+    generateToken(existingUser._id, res);
+
+    res.status(200).json({
+      _id: existingUser._id,
+      fullName: existingUser.fullName,
+      email: existingUser.email,
+      profilePicture: existingUser.profilePicture,
+    });
+  } catch (error) {
+    console.log("error in login controller");
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
   }
-
-  const isPasswordCorrect = await bcrypt.compare(
-    password,
-    existingUser.password,
-  );
-
-  if (!isPasswordCorrect) {
-    return res.status(400).json({ message: "Invalid credentials" });
-  }
-
-  generateToken(existingUser._id, res);
-
-  res.status(200).json({
-    _id: existingUser._id,
-    fullName: existingUser.fullName,
-    email: existingUser.email,
-    profilePicture: existingUser.profilePicture,
-  });
 };
 
-export const logout = async (req, res) => {
-  res.send("logout endpoint");
+export const logout = (_, res) => {
+  res.clearCookie("jwt"); // use clearCookie finsted of maxAge = 0
+  res.status(200).json({ message: "Logged out successfully" });
 };
