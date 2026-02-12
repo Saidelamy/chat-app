@@ -81,8 +81,26 @@ export const login = async (req, res) => {
 
   const existingUser = User.findOne({ email });
   if (!existingUser) {
-    return res.status(400).json({ message: "this user does not exisit!" });
+    return res.status(400).json({ message: "Invalid credentials" });
   }
+
+  const isPasswordCorrect = await bcrypt.compare(
+    password,
+    existingUser.password,
+  );
+
+  if (!isPasswordCorrect) {
+    return res.status(400).json({ message: "Invalid credentials" });
+  }
+
+  generateToken(existingUser._id, res);
+
+  res.status(200).json({
+    _id: existingUser._id,
+    fullName: existingUser.fullName,
+    email: existingUser.email,
+    profilePicture: existingUser.profilePicture,
+  });
 };
 
 export const logout = async (req, res) => {
