@@ -1,4 +1,6 @@
 import bcrypt from "bcryptjs";
+import { sendWelcomeEmail } from "../emails/emailHandlers.js";
+import { ENV } from "../lib/env.js";
 import { generateToken } from "../lib/utils.js";
 import { User } from "../Models/User.model.js";
 
@@ -38,15 +40,23 @@ export const signup = async (req, res) => {
     if (newUser) {
       await newUser.save();
       generateToken(newUser._id, res);
-      return res.status(201).json({
+      res.status(201).json({
         message: "User created successfully",
         user: {
-          user: newUser._id,
+          _id: newUser._id,
           fullName: newUser.fullName,
           email: newUser.email,
           profilePicture: newUser.profilePicture,
         },
       });
+
+      // send welcome email
+      try {
+        await sendWelcomeEmail(newUser.email, newUser.fullName, ENV.CLIENT_URL);
+      } catch (error) {
+        console.error("Error sending welcome email:", error);
+      }
+      // end of send email
     } else {
       res.status(500).json({ message: "Failed to create user" });
     }
@@ -58,8 +68,21 @@ export const signup = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-  const { email, passord } = req.body;
-  res.send("login endpoint");
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email and password are required" });
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ message: "Invalid email format" });
+  }
+
+  const existingUser = User.findOne({ email });
+  if (!existingUser) {
+    return res.status(400).json({ message: "this user does not exisit!" });
+  }
 };
 
 export const logout = async (req, res) => {
