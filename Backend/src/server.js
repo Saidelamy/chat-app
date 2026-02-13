@@ -1,3 +1,4 @@
+import cookieParser from "cookie-parser";
 import express from "express";
 import { connectDB } from "./lib/db.js";
 import { ENV } from "./lib/env.js"; // to read environment variables
@@ -5,6 +6,7 @@ import authRoutes from "./Routes/auth.route.js";
 import messagesRoutes from "./Routes/message.route.js";
 
 const app = express();
+app.use(cookieParser()); // to read cookies from request headers
 app.use(express.json()); // to read json data from request body
 
 app.use("/api/auth", authRoutes);
