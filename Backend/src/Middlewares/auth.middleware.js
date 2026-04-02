@@ -1,4 +1,4 @@
-import { User } from "../Models/User.model";
+import { User } from "../Models/User.model.js";
 
 export const protectRoute = async (req, res, next) => {
   try {

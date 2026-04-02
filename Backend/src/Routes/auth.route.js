@@ -5,12 +5,18 @@ import {
   signup,
   updateProfile,
 } from "../Controllers/auth.controller.js";
+import { arcjetProtection } from "../Middlewares/arcjet.middleware.js";
+import { protectRoute } from "./../Middlewares/auth.middleware.js";
 
 const router = express.Router();
 
-router.post("/signup", signup);
-router.post("/login", login);
-router.post("/logout", logout);
+router.get("/test", arcjetProtection, (req, res) => {
+  res.status(200).json({ message: "test" });
+});
+
+router.post("/signup", arcjetProtection, signup);
+router.post("/login", arcjetProtection, login);
+router.post("/logout", arcjetProtection, logout);
 
 router.put("/update-profile", protectRoute, updateProfile);
 
