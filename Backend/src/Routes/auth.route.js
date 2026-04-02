@@ -10,13 +10,15 @@ import { protectRoute } from "./../Middlewares/auth.middleware.js";
 
 const router = express.Router();
 
-router.get("/test", arcjetProtection, (req, res) => {
-  res.status(200).json({ message: "test" });
+router.use(arcjetProtection); // extend the arcjet protection to all routes in this router
+
+router.get("/test", (req, res) => {
+  res.status(200).json({ message: "test" }); // for test logic only
 });
 
-router.post("/signup", arcjetProtection, signup);
-router.post("/login", arcjetProtection, login);
-router.post("/logout", arcjetProtection, logout);
+router.post("/signup", signup);
+router.post("/login", login);
+router.post("/logout", logout);
 
 router.put("/update-profile", protectRoute, updateProfile);
 
