@@ -5,6 +5,11 @@ export const arcjetProtection = async (req, res, next) => {
   try {
     const decision = await aj.protect(req);
 
+    // to pass pot middleware postman act like pots
+    if (process.env.ARCJET_ENV === "development") {
+      return next();
+    }
+
     if (decision.isDenied()) {
       if (decision.reason.isRateLimit()) {
         return res
