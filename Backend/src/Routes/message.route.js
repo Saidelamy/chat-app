@@ -10,6 +10,6 @@ const route = express.Router();
 route.get("/contacts", protectRoute, getAllContacts);
 // route.get("/chats", getChatPartners);
 route.get("/:contactId", protectRoute, getMessagesByContactId);
-route.post("/send/:contactId", sendMessage);
+route.post("/send/:contactId", protectRoute, sendMessage);
 
 export default route;

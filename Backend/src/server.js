@@ -8,7 +8,12 @@ import messagesRoutes from "./Routes/message.route.js";
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: ENV.CLIENT_URL,
+    credentials: true,
+  }),
+);
 
 app.use(cookieParser()); // to read cookies from request headers
 app.use(express.json()); // to read json data from request body

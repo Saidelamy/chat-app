@@ -53,18 +53,19 @@ export const sendMessage = async (req, res) => {
       imageUrl = uploadResource.secure_url;
     }
 
-    const newMessage = {
+    const newMessage = new Message({
       senderId,
-      contactId,
+      receiverId: contactId,
       message,
       image: imageUrl,
-    };
+    });
     // this logic just send message to db but i need to send the message to the user who wait for it
     // it will happen by using socket.io
     await newMessage.save();
 
     res.status(201).json(newMessage);
   } catch (error) {
-    res.status(500).json({ message: "server error", error });
+    console.error("sendMessage error:", error);
+    res.status(500).json({ message: "server error", error: error.message });
   }
 };
