@@ -46,6 +46,20 @@ export const sendMessage = async (req, res) => {
     const { contactId } = req.params;
     const senderId = req.user._id;
 
+    if (!image && !message) {
+      res.status(400).json({ message: "All fields are required!" });
+    }
+    if (senderId.equals(receiverId)) {
+      //use .equals because sender and receiver are object returend from mongoose
+      res
+        .status(400)
+        .json({ message: "you cann't send message to your self " });
+    }
+    const receiverExist = await User.exists({ _id: contactId });
+    if (!receiverExist) {
+      res.status(404).json({ message: "receiver user not exist" });
+    }
+
     let imageUrl;
 
     if (image) {
@@ -84,7 +98,9 @@ export const getChatPartners = async (req, res) => {
     const chatPartenerIds = [
       ...new Set(
         messages.map((msg) => {
-          msg.senderId === loggedInUserId ? msg.receiverId : msg.senderId;
+          return msg.senderId.toString() === loggedInUserId.toString()
+            ? msg.receiverId.toString()
+            : msg.senderId.toString();
         }),
       ),
     ];
@@ -94,9 +110,7 @@ export const getChatPartners = async (req, res) => {
       "-password",
     );
 
-    res
-      .status(200)
-      .json({ message: "messages returend successfully", partener });
+    res.status(200).json(partener);
   } catch (error) {
     res.status(500).json({ message: "Internal server error", error });
   }
