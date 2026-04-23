@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { Toaster } from "react-hot-toast";
 import { Navigate, Route, Routes } from "react-router";
 import Loader from "./components/Loader.jsx";
 import Chat from "./pages/Chat";
@@ -34,6 +35,7 @@ function App() {
           />
         </Routes>
       </div>
+      <Toaster />
     </>
   );
 }
