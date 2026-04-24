@@ -1,5 +1,6 @@
-import { MessageCircleIcon, UserIcon } from "lucide-react";
+import { LoaderIcon, MessageCircleIcon, UserIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { Link } from "react-router";
 import { useAuthStore } from "../store/useAuthStore";
 
 function Signup() {
@@ -12,7 +13,6 @@ function Signup() {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
 
@@ -25,7 +25,7 @@ function Signup() {
         <div className="relative w-full max-w-6xl md:h-[800px] h-[650px]">
           <div className="w-full flex flex-col md:flex-row">
             {/* left side */}
-            <div className="md:w-1/2 p-8 flex items-center justify-center md:border-r border-slate-600/30 ">
+            <div className="md:w-1/2 p-8 md:border-r border-slate-600/30 ">
               {/* message heading */}
               <div className="text-center max-w-md">
                 <MessageCircleIcon className="w-12 h-12 mx-auto text-slate-400 mb-4" />
@@ -85,10 +85,24 @@ function Signup() {
 
                 {/* submit button */}
 
-                <button className="auth-btn" type="submit">
-                  Create Acount
+                <button
+                  className="auth-btn"
+                  type="submit"
+                  disabled={isSigningUp}
+                >
+                  {isSigningUp ? (
+                    <LoaderIcon className="w-full h-5 animate-spin text-center" />
+                  ) : (
+                    " Create Acount"
+                  )}
                 </button>
               </form>
+
+              <div className="mt-6 text-center">
+                <Link to={"/login"} className="auth-link">
+                  Already have acount
+                </Link>
+              </div>
             </div>
           </div>
         </div>
