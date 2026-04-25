@@ -5,7 +5,7 @@ export const useAuthStore = create((set) => ({
   authUser: null,
   isCheckingAuth: false,
 
-  isSigningUp: true,
+  isSigningUp: false,
 
   checkAuth: async () => {
     try {
@@ -23,15 +23,12 @@ export const useAuthStore = create((set) => ({
   signUp: async (data) => {
     set({ isSigningUp: true });
     try {
-      const res = axiosInstance.post("/auth/signup", data);
+      const res = await axiosInstance.post("/auth/signup", data);
       set({ authUser: res.data });
 
       toast.success("Successfully registered!");
     } catch (error) {
-      toast.error(
-        "Error while register please try again later!.",
-        error.response.data.message,
-      );
+      toast.error(error.response.data.message);
       console.log("error when signing up ", error.response.data.message);
     } finally {
       set({ isSigningUp: false });

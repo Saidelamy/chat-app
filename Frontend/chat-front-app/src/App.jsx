@@ -19,7 +19,7 @@ function App() {
 
   return (
     <>
-      <div className="min-h-screen bg-teal-700 relative flex items-center justify-center p-4 overflow-hidden">
+      <div className="min-h-screen relative flex items-center justify-center overflow-hidden">
         <Routes>
           <Route
             path="/signup"

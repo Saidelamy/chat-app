@@ -1,38 +1,49 @@
+import { yupResolver } from "@hookform/resolvers/yup";
 import { LoaderIcon, MessageCircleIcon, UserIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
+import * as yup from "yup";
 import { useAuthStore } from "../store/useAuthStore";
 
-function Signup() {
-  // const { setData, setSetData } = useState({
-  //   fullName: "",
-  //   email: "",
-  //   password: "",
-  // });
+const schema = yup.object({
+  fullName: yup
+    .string()
+    .required("Full Name is required.")
+    .min(3, "FullName must be at least 3 chars"),
+  email: yup.string().email("Invalid email").required("Email is required"),
+  password: yup
+    .string()
+    .min(3, "Password must be at least 3 chars")
+    .required("Password is required"),
+});
 
+function Signup() {
+  const { signUp, isSigningUp } = useAuthStore();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({ resolver: yupResolver(schema) });
 
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = (data) => {
+    console.log(data);
+    signUp(data);
+  };
 
-  const { signUp, isSigningUp } = useAuthStore();
   return (
     <>
-      <div className="w-full flex items-center justify-center p-4 bg-slate-800">
-        <div className="relative w-full max-w-6xl md:h-[800px] h-[650px]">
-          <div className="w-full flex flex-col md:flex-row">
+      <div className="w-full flex items-center justify-center p-4  bg-white">
+        <div className="relative w-full max-w-6xl  md:h-[800px] h-[650px]">
+          <div className="w-full flex  flex-col md:flex-row">
             {/* left side */}
             <div className="md:w-1/2 p-8 md:border-r border-slate-600/30 ">
               {/* message heading */}
               <div className="text-center max-w-md">
-                <MessageCircleIcon className="w-12 h-12 mx-auto text-slate-400 mb-4" />
-                <h2 className="text-2xl font-bold text-slate-200 mb-2">
+                <MessageCircleIcon className="w-12 h-12 mx-auto text-green-400 mb-4" />
+                <h2 className="text-2xl font-bold text-green-700 mb-2">
                   Create Account
                 </h2>
-                <p className="text-slate-400">Sign up for a new account</p>
+                <p className="text-green-700">Sign up for a new account</p>
               </div>
 
               {/* Form */}
@@ -51,6 +62,10 @@ function Signup() {
                       {...register("fullName", { required: true })}
                     />
                   </div>
+
+                  <p className="text-red-400 mt-3">
+                    {errors?.fullName?.message}
+                  </p>
                 </div>
 
                 {/* Email */}
@@ -66,6 +81,7 @@ function Signup() {
                       {...register("email", { required: true })}
                     />
                   </div>
+                  <p className="text-red-400 mt-3">{errors?.email?.message}</p>
                 </div>
 
                 {/* password */}
@@ -81,6 +97,9 @@ function Signup() {
                       {...register("password", { required: true })}
                     />
                   </div>
+                  <p className="text-red-400 mt-3">
+                    {errors?.password?.message}
+                  </p>
                 </div>
 
                 {/* submit button */}
@@ -103,6 +122,12 @@ function Signup() {
                   Already have acount
                 </Link>
               </div>
+            </div>
+
+            {/* right side */}
+
+            <div className="hidden md:w-1/2 md:flex items-center justify-center p-6 bg-gradient-to-bl from-slate-500/20 to-transparent">
+              <img src="/Signup.gif" alt="sign up ILLUSTRATION image" />
             </div>
           </div>
         </div>
