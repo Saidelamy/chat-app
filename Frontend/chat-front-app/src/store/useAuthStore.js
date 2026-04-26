@@ -4,8 +4,8 @@ import { axiosInstance } from "../lib/axios.js";
 export const useAuthStore = create((set) => ({
   authUser: null,
   isCheckingAuth: false,
-
   isSigningUp: false,
+  isLogin: false,
 
   checkAuth: async () => {
     try {
@@ -32,6 +32,20 @@ export const useAuthStore = create((set) => ({
       console.log("error when signing up ", error.response.data.message);
     } finally {
       set({ isSigningUp: false });
+    }
+  },
+
+  login: async (data) => {
+    set({ isLogin: true });
+    try {
+      const res = await axiosInstance("/auth/login", data);
+
+      set({ authUser: res.data });
+      toast.success("User Logged in successfully!");
+    } catch (error) {
+      toast.error(error.response.data.message);
+    } finally {
+      set({ isLogin: false });
     }
   },
 }));
