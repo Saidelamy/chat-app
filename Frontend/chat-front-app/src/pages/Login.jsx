@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { LoaderIcon, MessageCircleIcon, UserIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import * as yup from "yup";
 import { useAuthStore } from "../store/useAuthStore";
 
@@ -15,7 +15,6 @@ const schema = yup.object({
 
 const Login = () => {
   const { isLogin, login } = useAuthStore();
-  const { navigate } = useNavigate();
 
   const {
     register,
@@ -25,7 +24,6 @@ const Login = () => {
 
   const onSubmit = (data) => {
     login(data);
-    navigate("/");
   };
 
   return (
