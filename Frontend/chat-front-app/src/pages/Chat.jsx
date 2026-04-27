@@ -1,14 +1,12 @@
-import React from "react";
 import { useAuthStore } from "../store/useAuthStore";
 
 function Chat() {
-  const { authUser, isLoading, login } = useAuthStore();
+  const { logout } = useAuthStore();
 
-  console.log(authUser, isLoading);
   return (
     <div>
-      <button className="btn" onClick={login}>
-        click login
+      <button className="btn" onClick={logout}>
+        click logout
       </button>
     </div>
   );
