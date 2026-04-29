@@ -1,26 +1,24 @@
-import { useEffect } from "react";
-import { useAuthStore } from "../store/useAuthStore";
+import ActiveTab from "../components/ActiveTab";
+import ChatList from "../components/ChatList";
+import ContactList from "../components/ContactList";
+import ProfileHeader from "../components/ProfileHeader";
 import { useChatStore } from "../store/useChatStore";
 
 function Chat() {
-  const { logout } = useAuthStore();
+  const { activeTab } = useChatStore();
 
-  const { allContacts, chats, getAllContacts, getMyChatContacts } =
-    useChatStore();
-
-  useEffect(() => {
-    getAllContacts();
-    getMyChatContacts();
-  }, [getAllContacts, getMyChatContacts]);
-
-  console.log("contacts:", allContacts);
-  console.log("chats:", chats);
   return (
-    <div>
-      <button className="btn" onClick={logout}>
-        click logout
-      </button>
-    </div>
+    <>
+      <div className="w-full h-screen gap-10 grid grid-cols-[350px_1fr] container">
+        <div className="bg-gradient-to-r from-slate-100/60 to-gray-200  border-r-2 border-green-500">
+          <ProfileHeader />
+          <ActiveTab />
+          <div className="p-2">
+            {activeTab === "chats" ? <ChatList /> : <ContactList />}
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
 
