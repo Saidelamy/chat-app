@@ -7,19 +7,17 @@ function ProfileHeader() {
 
   const [selectedImage, setSelectedImage] = useState(null);
   const fileInputRef = useRef(null);
-  const handleImageUpload = (e) => {
+
+  const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    const reader = new FileReader();
+    setSelectedImage(URL.createObjectURL(file));
 
-    reader.readAsDataURL(file);
+    const formData = new FormData();
+    formData.append("profilePicture", file);
 
-    reader.onloadend = async () => {
-      const base64Image = reader.result;
-      setSelectedImage(base64Image);
-      await updateImageProfile({ profilePic: base64Image });
-    };
+    await updateImageProfile(formData);
   };
 
   console.log(authUser);

@@ -66,7 +66,11 @@ export const useAuthStore = create((set) => ({
 
   updateImageProfile: async (data) => {
     try {
-      const res = await axiosInstance.post("update-profile", data);
+      const res = await axiosInstance.put("update-profile", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       set({ authUser: res.data });
       toast.success("Image updated successfully!");
     } catch (error) {
