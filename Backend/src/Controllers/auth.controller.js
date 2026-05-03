@@ -6,7 +6,7 @@ import { generateToken } from "../lib/utils.js";
 import { User } from "../Models/User.model.js";
 
 export const signup = async (req, res) => {
-  const { fullName, email, password } = req.body;
+  const { fullName, email, password, profilePicture } = req.body;
 
   try {
     if (!fullName || !email || !password) {
@@ -36,6 +36,7 @@ export const signup = async (req, res) => {
       fullName,
       email,
       password: hashedPassword,
+      profilePicture,
     });
 
     if (newUser) {
@@ -115,17 +116,16 @@ export const logout = (_, res) => {
 };
 
 export const updateProfile = async (req, res) => {
-  const { profilePicture } = req.body;
-  if (!profilePicture) {
+  if (!req.file) {
     return res.status(400).json({ message: "Profile picture is required" });
   }
 
   try {
     const userId = req.user._id;
-    const uploadResponse = await cloudinary.uploader.upload(profilePicture); // make update in cloudinary db
+    const uploadResponse = await cloudinary.uploader.upload(req.file.path);
 
     const updatedUser = await User.findByIdAndUpdate(
-      userId, // make update in our db
+      userId,
       {
         profilePicture: uploadResponse.secure_url,
       },
@@ -133,7 +133,9 @@ export const updateProfile = async (req, res) => {
     );
 
     res.status(200).json({
-      message: "Profile picture updated successfully",
+      _id: updatedUser._id,
+      fullName: updatedUser.fullName,
+      email: updatedUser.email,
       profilePicture: updatedUser.profilePicture,
     });
   } catch (error) {

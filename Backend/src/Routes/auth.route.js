@@ -1,4 +1,5 @@
 import express from "express";
+import multer from "multer";
 import {
   login,
   logout,
@@ -20,7 +21,15 @@ router.post("/signup", signup);
 router.post("/login", login);
 router.post("/logout", logout);
 
-router.put("/update-profile", protectRoute, updateProfile);
+// multer and update profile end point
+const upload = multer({ dest: "uploads/" });
+router.put(
+  "/update-profile",
+  protectRoute,
+  upload.single("profilePicture"),
+  updateProfile,
+);
+// router.put("/update-profile", protectRoute, updateProfile);
 
 router.put("/check", protectRoute, (req, res) => {
   // make this route to check if the user is authenticated or not by sending a request to it from the frontend when the app loads
