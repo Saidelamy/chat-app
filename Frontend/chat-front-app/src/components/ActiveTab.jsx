@@ -9,8 +9,8 @@ function ActiveTab() {
           onClick={() => setActiveTab("chats")}
           className={`tab ${
             activeTab === "chats"
-              ? "bg-cyan-500/20 text-cyan-300"
-              : "text-slate-100"
+              ? "bg-green-500 text-white"
+              : "text-green-500 bg-green-200/50"
           }`}
         >
           Chats
@@ -20,8 +20,8 @@ function ActiveTab() {
           onClick={() => setActiveTab("contacts")}
           className={`tab ${
             activeTab === "contacts"
-              ? "bg-cyan-500/20 text-cyan-300"
-              : "text-slate-100"
+              ? "bg-green-500 text-white"
+              : "text-green-500 bg-green-200/50"
           }`}
         >
           Contacts
