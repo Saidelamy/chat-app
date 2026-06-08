@@ -3,7 +3,8 @@ import { useChatStore } from "../store/useChatStore";
 import UsersLoadingSkeleton from "./UsersLoadingSkeleton";
 
 function ContactList() {
-  const { allContacts, getAllContacts, isContactsLoading } = useChatStore();
+  const { allContacts, getAllContacts, isContactsLoading, setSelectedUser } =
+    useChatStore();
 
   useEffect(() => {
     getAllContacts();
@@ -15,7 +16,13 @@ function ContactList() {
     <>
       {allContacts?.contacts?.map((contact) => {
         return (
-          <div key={contact._id} className="text-gray-800">
+          <div
+            key={contact._id}
+            className="text-gray-800 cursor-pointer"
+            onClick={() => {
+              setSelectedUser(contact);
+            }}
+          >
             <div className="bg-gradient-to-r rounded-lg from-green-100/50 to-green-100 w-full  p-3 my-2 flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <div className="avatar size-16 online">

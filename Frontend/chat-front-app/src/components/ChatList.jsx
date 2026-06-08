@@ -4,7 +4,8 @@ import NoChatsFound from "./NoChatsFound";
 import UsersLoadingSkeleton from "./UsersLoadingSkeleton";
 
 function ChatList() {
-  const { chats, getMyChatContacts, isMessagesLoading } = useChatStore();
+  const { chats, getMyChatContacts, isMessagesLoading, setSelectedUser } =
+    useChatStore();
 
   console.log("chats", chats);
   useEffect(() => {
@@ -17,7 +18,13 @@ function ChatList() {
     <>
       {chats?.map((chat) => {
         return (
-          <div key={chat._id} className="text-black text-lg ">
+          <div
+            key={chat._id}
+            className="text-black text-lg cursor-pointer"
+            onClick={() => {
+              setSelectedUser(chat);
+            }}
+          >
             <div className="bg-gradient-to-r rounded-lg from-green-100/50 to-green-100 w-full  p-3 my-2 flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <div className="avatar online size-16">
