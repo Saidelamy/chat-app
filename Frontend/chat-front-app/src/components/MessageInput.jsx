@@ -72,7 +72,7 @@ function MessageInput() {
           onChange={(e) => {
             setText(e.target.value);
           }}
-          className="flex-1 bg-slate-200/50 border border-slate-200/50 rounded-lg py-2 px-4"
+          className="flex-1 bg-slate-200/50 border text-black border-green-500/50 rounded-lg py-2 px-4 focus:border-green-800"
           placeholder="Type your message..."
         />
 
