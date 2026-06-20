@@ -15,12 +15,13 @@ function ChatContainer() {
   }, [selectedUser, getMessagesById]);
 
   return (
-    <>
+    <div className="flex flex-col h-full min-h-0">
       <ChatHeader />
 
-      {messages?.messages?.length > 0 && !isMessagesLoading ? (
-        <div className="max-w-3xl mx-auto space-y-6">
-          {messages?.messages?.map((message) => (
+      <div className="flex-1 min-h-0 overflow-y-auto p-4">
+        {messages?.length > 0 && !isMessagesLoading ? (
+          <div className="max-w-3xl mx-auto space-y-6">
+            {messages.map((message) => (
             <div
               key={message._id}
               className={`chat ${message.senderId === authUser._id ? "chat-end" : "chat-start"}`}
@@ -28,9 +29,9 @@ function ChatContainer() {
               <div
                 className={`chat-bubble relative ${message.senderId === authUser._id ? "bg-green-600 text-white" : "bg-slate-700 text-white"}`}
               >
-                {message.profilePicture && (
+                {message.image && (
                   <img
-                    src={message.profilePicture}
+                    src={message.image}
                     alt="Shared"
                     className="rounded-lg h-48 object-cover"
                   />
@@ -44,16 +45,17 @@ function ChatContainer() {
                 </p>
               </div>
             </div>
-          ))}
-        </div>
-      ) : isMessagesLoading ? (
-        <MessageLoadingSkeleton />
-      ) : (
-        <NoChatHistory name={selectedUser.fullName} />
-      )}
+            ))}
+          </div>
+        ) : isMessagesLoading ? (
+          <MessageLoadingSkeleton />
+        ) : (
+          <NoChatHistory name={selectedUser.fullName} />
+        )}
+      </div>
 
       <MessageInput />
-    </>
+    </div>
   );
 }
 

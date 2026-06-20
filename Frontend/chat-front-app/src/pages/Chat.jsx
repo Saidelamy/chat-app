@@ -23,7 +23,7 @@ function Chat() {
 
         {/* right */}
 
-        <div className="bg-gradient-to-t from-slate-100 to-gray-300 ">
+        <div className="bg-gradient-to-t from-slate-100 to-gray-300 h-full min-h-0 overflow-hidden">
           {selectedUser ? <ChatContainer /> : <NoConversation />}
         </div>
       </div>

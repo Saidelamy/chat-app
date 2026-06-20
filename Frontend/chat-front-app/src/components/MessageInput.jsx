@@ -16,7 +16,7 @@ function MessageInput() {
     if (!text.trim() && !imagePreview) return;
 
     sendMessage({
-      text: text.trim(),
+      message: text.trim(),
       image: imagePreview,
     });
     setText("");
@@ -42,7 +42,7 @@ function MessageInput() {
   };
 
   return (
-    <div className="p-4 border-t border-slate-700/50">
+    <div className="shrink-0 p-4 border-t border-slate-700/50">
       {imagePreview && (
         <div className="max-w-3xl mx-auto mb-3 flex items-center">
           <div className="relative">
