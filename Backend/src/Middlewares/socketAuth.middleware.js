@@ -1,10 +1,12 @@
-import { ENV } from "../lib/env";
+import jwt from "jsonwebtoken";
+import { ENV } from "../lib/env.js";
 import { User } from "../Models/User.model.js";
+
 export const socketAuthMiddleware = async (socket, next) => {
   try {
-    const token = socket.handeshake.headers.cookie
+    const token = socket.handshake.headers.cookie
       ?.split("; ")
-      .find((row) => row.startWith("jwt="))
+      .find((row) => row.startsWith("jwt="))
       .split("=")[1];
 
     if (!token) {
@@ -25,6 +27,10 @@ export const socketAuthMiddleware = async (socket, next) => {
     // attach user info to socket server
     socket.user = user;
     socket.userId = user._id.toString();
+
+    console.log(
+      `Socket authenticated for user: ${user.fullName} (${user._id})`,
+    );
 
     next();
   } catch (error) {

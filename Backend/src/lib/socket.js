@@ -1,8 +1,8 @@
 import express from "express";
 import http from "http";
 import { Server } from "socket.io";
-import { socketAuthMiddleware } from "../Middlewares/socketAuth.middleware";
-import { ENV } from "./env";
+import { socketAuthMiddleware } from "../Middlewares/socketAuth.middleware.js";
+import { ENV } from "./env.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -29,8 +29,8 @@ io.on("connection", (socket) => {
   io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
   // with socket.on we listen to events from cleints
-  socket.on("disconnected", () => {
-    console.log("user desconnected", socket.user.fullName);
+  socket.on("disconnect", () => {
+    console.log("user disconnected", socket.user.fullName);
 
     delete userSocketMap[userId];
     io.emit("getOnlineUsers", Object.keys(userSocketMap)); //after delete disconnected user return connected user
