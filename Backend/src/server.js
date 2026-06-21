@@ -16,7 +16,8 @@ app.use(
 );
 
 app.use(cookieParser()); // to read cookies from request headers
-app.use(express.json()); // to read json data from request body
+app.use(express.json({ limit: "5mb" })); // to read json data from request body
+//limit to ignore when send image give me in backend entity too latge
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messagesRoutes);

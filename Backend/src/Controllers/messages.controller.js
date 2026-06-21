@@ -47,17 +47,17 @@ export const sendMessage = async (req, res) => {
     const senderId = req.user._id;
 
     if (!image && !message) {
-      res.status(400).json({ message: "All fields are required!" });
+      return res.status(400).json({ message: "One of fields are required!" });
     }
-    if (senderId.equals(receiverId)) {
+    if (senderId.equals(contactId)) {
       //use .equals because sender and receiver are object returend from mongoose
-      res
+      return res
         .status(400)
         .json({ message: "you cann't send message to your self " });
     }
     const receiverExist = await User.exists({ _id: contactId });
     if (!receiverExist) {
-      res.status(404).json({ message: "receiver user not exist" });
+      return res.status(404).json({ message: "receiver user not exist" });
     }
 
     let imageUrl;
