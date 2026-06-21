@@ -1,10 +1,13 @@
 import { useEffect } from "react";
+import { useAuthStore } from "../store/useAuthStore";
 import { useChatStore } from "../store/useChatStore";
 import UsersLoadingSkeleton from "./UsersLoadingSkeleton";
 
 function ContactList() {
   const { allContacts, getAllContacts, isContactsLoading, setSelectedUser } =
     useChatStore();
+
+  const { onlineUsers } = useAuthStore();
 
   useEffect(() => {
     getAllContacts();
@@ -25,7 +28,9 @@ function ContactList() {
           >
             <div className="bg-gradient-to-r rounded-lg from-green-100/50 to-green-100 w-full  p-3 my-2 flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <div className="avatar size-16 online">
+                <div
+                  className={`avatar size-16 ${onlineUsers.includes(contact._id) ? "online" : "offline"}`}
+                >
                   <img
                     src={contact.profilePicture}
                     alt={contact.fullName}

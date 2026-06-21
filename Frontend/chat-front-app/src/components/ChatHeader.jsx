@@ -1,9 +1,13 @@
 import { XIcon } from "lucide-react";
 import { useEffect } from "react";
+import { useAuthStore } from "../store/useAuthStore";
 import { useChatStore } from "../store/useChatStore";
 
 function ChatHeader() {
   const { selectedUser, setSelectedUser } = useChatStore();
+  const { onlineUsers } = useAuthStore();
+
+  const isOnline = onlineUsers.includes(selectedUser._id);
 
   useEffect(() => {
     const handleEscKey = (event) => {
@@ -17,11 +21,9 @@ function ChatHeader() {
   }, [setSelectedUser]);
 
   return (
-    <div
-      className="flex shrink-0 justify-between items-center bg-green-800/20 border-b border-green-500 max-h-[96px] px-6"
-    >
+    <div className="flex shrink-0 justify-between items-center bg-green-800/20 border-b border-green-500 max-h-[96px] px-6">
       <div className="flex items-center space-x-3">
-        <div className={`avatar ${true ? "online" : "offline"}`}>
+        <div className={`avatar ${isOnline ? "online" : "offline"}`}>
           <div className="size-24">
             <img
               className="rounded-full"
@@ -34,7 +36,7 @@ function ChatHeader() {
         <div>
           <h3 className="text-white font-medium">{selectedUser.fullName}</h3>
           <p className="text-slate-200 text-sm">
-            {true ? "Online" : "Offline"}
+            {isOnline ? "Online" : "Offline"}
           </p>
         </div>
       </div>
