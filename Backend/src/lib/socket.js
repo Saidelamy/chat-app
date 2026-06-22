@@ -16,6 +16,11 @@ const io = new Server(server, {
 // middleware to handle all web socket connections ////// very important
 io.use(socketAuthMiddleware);
 
+// will use this function to check if the user is online or not
+export function getReceiverSocketId(userId) {
+  return userSocketMap[userId];
+}
+
 // sorting online user
 const userSocketMap = {};
 
