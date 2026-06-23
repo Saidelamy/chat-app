@@ -13,6 +13,7 @@ function ChatContainer() {
     isMessagesLoading,
     subscribeToMessages,
     unsubscribeFromMessages,
+    sendMessage,
   } = useChatStore();
   const { authUser } = useAuthStore();
 
@@ -74,7 +75,10 @@ function ChatContainer() {
         ) : isMessagesLoading ? (
           <MessageLoadingSkeleton />
         ) : (
-          <NoChatHistory name={selectedUser.fullName} />
+          <NoChatHistory
+            name={selectedUser.fullName}
+            sendMessage={sendMessage}
+          />
         )}
       </div>
 
