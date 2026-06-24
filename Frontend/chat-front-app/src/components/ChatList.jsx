@@ -33,7 +33,7 @@ function ChatList() {
                   className={`avatar ${onlineUsers.includes(chat._id) ? "online" : "offline"}  size-16`}
                 >
                   <img
-                    src={chat.profilePicture}
+                    src={chat.profilePicture || "/avatar.png"}
                     alt={chat.fullName}
                     className=" rounded-full"
                   />

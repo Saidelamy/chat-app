@@ -20,7 +20,6 @@ function ProfileHeader() {
     await updateImageProfile(formData);
   };
 
-  console.log(authUser);
   return (
     <>
       <div className="w-full p-5 flex justify-between items-center border-r-2">
@@ -32,11 +31,7 @@ function ProfileHeader() {
               onClick={() => fileInputRef.current.click()}
             >
               <img
-                src={
-                  selectedImage ||
-                  authUser?.profilePicture ||
-                  "/avatar.png"
-                }
+                src={selectedImage || authUser?.profilePicture || "avatar.png"}
                 alt="User image"
                 className="size-full object-cover "
               />
@@ -57,7 +52,7 @@ function ProfileHeader() {
           {/* username and status */}
           <div>
             <h2 className="text-slate-800 font-medium text-base max-w-[180px]">
-              {authUser.fullName}
+              {authUser?.fullName}
             </h2>
             <p className="text-gray-600">Online</p>
           </div>

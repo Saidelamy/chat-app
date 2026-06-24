@@ -8,7 +8,7 @@ export const useChatStore = create((set, get) => ({
   chats: [],
   messages: [],
   activeTab: "chats",
-  selectedUser: "null",
+  selectedUser: null,
   isContactsLoading: false,
   isMessagesLoading: false,
 
@@ -43,6 +43,19 @@ export const useChatStore = create((set, get) => ({
     } finally {
       set({ isContactsLoading: false });
     }
+  },
+
+  resetChatState: () => {
+    get().unsubscribeFromMessages();
+    set({
+      allContacts: [],
+      chats: [],
+      messages: [],
+      activeTab: "chats",
+      selectedUser: null,
+      isContactsLoading: false,
+      isMessagesLoading: false,
+    });
   },
 
   getMessagesById: async (userId) => {
@@ -103,6 +116,6 @@ export const useChatStore = create((set, get) => ({
 
   unsubscribeFromMessages: () => {
     const socket = useAuthStore.getState().socket;
-    socket.off("newMessage");
+    socket?.off("newMessage");
   },
 }));

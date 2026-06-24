@@ -10,7 +10,7 @@ function App() {
   const { checkAuth, isCheckingAuth, authUser } = useAuthStore();
 
   useEffect(() => {
-    checkAuth;
+    checkAuth();
   }, [checkAuth]);
 
   console.log("authUser: ", authUser);
@@ -19,7 +19,7 @@ function App() {
 
   return (
     <>
-      <div className="min-h-screen relative flex items-center justify-center overflow-hidden">
+      <div className="h-screen relative flex items-center justify-center">
         <Routes>
           <Route
             path="/signup"
