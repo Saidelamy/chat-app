@@ -1,6 +1,7 @@
 import { Message } from "../Models/Message.model.js";
 import { User } from "../Models/User.model.js";
 import cloudinary from "../lib/cloudinary.js";
+import { getReceiverSocketId, io } from "../lib/socket.js";
 
 export const getAllContacts = async (req, res) => {
   try {
@@ -74,10 +75,11 @@ export const sendMessage = async (req, res) => {
       image: imageUrl,
     });
     // this logic just send message to db but i need to send the message to the user who wait for it
-    // it will happen by using socket.io
+
     await newMessage.save();
 
-    const receiverSocketId = getReceiverSocketId(receiverId);
+    // sync messages with socket api
+    const receiverSocketId = getReceiverSocketId(contactId);
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("newMessage", newMessage);
     }
