@@ -12,7 +12,6 @@ function ContactList() {
   useEffect(() => {
     getAllContacts();
   }, [getAllContacts]);
-  console.log(allContacts);
 
   if (isContactsLoading) return <UsersLoadingSkeleton />;
   return (

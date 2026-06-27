@@ -6,14 +6,22 @@ import Chat from "./pages/Chat";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import { useAuthStore } from "./store/useAuthStore";
+import { useChatStore } from "./store/useChatStore.js";
 function App() {
-  const { checkAuth, isCheckingAuth, authUser } = useAuthStore();
+  const { checkAuth, isCheckingAuth, authUser, socket } = useAuthStore();
+  const { subscribeToMessages, unsubscribeFromMessages } = useChatStore();
 
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
 
-  console.log("authUser: ", authUser);
+  useEffect(() => {
+    if (!authUser || !socket) return;
+    subscribeToMessages();
+    return () => {
+      unsubscribeFromMessages();
+    };
+  }, [socket, authUser]);
 
   if (isCheckingAuth) return <Loader />;
 

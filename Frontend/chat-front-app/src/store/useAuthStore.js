@@ -19,12 +19,10 @@ export const useAuthStore = create((set, get) => ({
     set({ isCheckingAuth: true });
     try {
       const res = await axiosInstance.get("/auth/check");
-      console.log(res);
       set({ authUser: res.data });
 
       get().connectSocket();
     } catch (error) {
-      console.log("error in checking auth", error);
       set({ authUser: null });
     } finally {
       set({ isCheckingAuth: false });
@@ -42,7 +40,6 @@ export const useAuthStore = create((set, get) => ({
       get().connectSocket();
     } catch (error) {
       toast.error(error.response.data.message);
-      console.log("error when signing up ", error.response.data.message);
     } finally {
       set({ isSigningUp: false });
     }
@@ -59,7 +56,6 @@ export const useAuthStore = create((set, get) => ({
       get().connectSocket();
     } catch (error) {
       toast.error(error?.response?.data?.message);
-      console.log(error?.response?.data?.message);
     } finally {
       set({ isLogin: false });
     }
@@ -75,7 +71,6 @@ export const useAuthStore = create((set, get) => ({
       get().disconnectSocket();
     } catch (error) {
       toast.error("Error while logging out");
-      console.log("error logging out", error.response.data.message);
     }
   },
 

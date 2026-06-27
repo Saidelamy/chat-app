@@ -18,6 +18,18 @@ export const useChatStore = create((set, get) => ({
 
   setSelectedUser: (selectedUser) => {
     set({ selectedUser });
+
+    if (selectedUser) {
+      set((state) => ({
+        chats: state.chats.map((chat) =>
+          chat._id === selectedUser._id ? { ...chat, unreadCount: 0 } : chat,
+        ),
+      }));
+
+      axiosInstance.put(`/messages/read/${selectedUser._id}`).catch((error) => {
+        console.error("Failed to mark messages as read:", error);
+      });
+    }
   },
 
   getAllContacts: async () => {
@@ -25,9 +37,8 @@ export const useChatStore = create((set, get) => ({
     try {
       const res = await axiosInstance.get("/messages/contacts");
       set({ allContacts: res.data });
-      console.log(res.data);
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error?.response?.data?.message);
     } finally {
       set({ isContactsLoading: false });
     }
@@ -39,7 +50,7 @@ export const useChatStore = create((set, get) => ({
       const res = await axiosInstance.get("/messages/chats");
       set({ chats: res.data });
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error?.response?.data?.message);
     } finally {
       set({ isContactsLoading: false });
     }
@@ -64,7 +75,7 @@ export const useChatStore = create((set, get) => ({
       const res = await axiosInstance.get(`/messages/${userId}`);
       set({ messages: res.data.messages });
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error?.response?.data?.message);
     } finally {
       set({ isMessagesLoading: false });
     }
@@ -99,18 +110,38 @@ export const useChatStore = create((set, get) => ({
   },
 
   subscribeToMessages: () => {
-    const { selectedUser } = get();
-    if (!selectedUser) return;
-
-    const socket = useAuthStore.getState().socket;
+    const socket = useAuthStore?.getState()?.socket;
 
     socket.on("newMessage", (newMessage) => {
-      const isMessageSentFromSelectedUser =
-        newMessage.senderId === selectedUser._id;
-      if (!isMessageSentFromSelectedUser) return;
+      const { selectedUser, messages, chats } = get();
 
-      const currentMessages = get().messages;
-      set({ messages: [...currentMessages, newMessage] });
+      const isMessageFromSelectedUser =
+        newMessage.senderId === selectedUser?._id;
+
+      if (isMessageFromSelectedUser) {
+        set({ messages: [...messages, newMessage] });
+      }
+
+      const chatExists = chats.some((chat) => chat._id === newMessage.senderId);
+
+      if (chatExists) {
+        set({
+          chats: chats.map((chat) =>
+            chat._id === newMessage.senderId
+              ? {
+                  ...chat,
+                  lastMessage: newMessage.message || "📷 Photo",
+                  lastMessageTime: newMessage.createdAt,
+                  unreadCount: isMessageFromSelectedUser
+                    ? 0
+                    : (chat.unreadCount || 0) + 1,
+                }
+              : chat,
+          ),
+        });
+      } else {
+        get().getMyChatContacts();
+      }
     });
   },
 

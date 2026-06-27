@@ -26,7 +26,6 @@ function Signup() {
   } = useForm({ resolver: yupResolver(schema) });
 
   const onSubmit = (data) => {
-    console.log(data);
     signUp(data);
   };
 
