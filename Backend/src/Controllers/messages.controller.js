@@ -98,7 +98,7 @@ export const getChatPartners = async (req, res) => {
     // find all message that sender or reciever equal logged in id
     const messages = await Message.find({
       $or: [{ senderId: loggedInUserId }, { receiverId: loggedInUserId }],
-    });
+    }).sort({ createdAt: -1 }); //returm last message to show it in main
 
     // get id for another person
     // new set because messages can be dublicated
@@ -117,8 +117,52 @@ export const getChatPartners = async (req, res) => {
       "-password",
     );
 
-    res.status(200).json(partener);
+    // add lastMessage and unreadCount for each partner
+
+    const parternerWithInfotmations = partener.map((partner) => {
+      const partnerId = partner._id.toString();
+
+      const lastMsg = messages.find(
+        (msg) =>
+          msg.senderId.toString() === partnerId ||
+          msg.receiverId.toString() === partnerId,
+      );
+
+      const unreadCount = messages.filter(
+        (msg) =>
+          msg.senderId.toString() === partnerId &&
+          msg.receiverId.toString() === loggedInUserId.toString() &&
+          !msg.read,
+      ).length;
+
+      return {
+        ...partner.toObject(),
+        lastMessage: lastMsg ? lastMsg.message || "📷 Photo" : null,
+        lastMessageTime: lastMsg ? lastMsg.createdAt : null,
+        unreadCount,
+      };
+    });
+
+    res.status(200).json(parternerWithInfotmations);
   } catch (error) {
     res.status(500).json({ message: "Internal server error", error });
+  }
+};
+
+export const markMessagesAsRead = async (req, res) => {
+  try {
+    const myId = req.user._id;
+    const { contactId } = req.params;
+
+    const result = await Message.updateMany(
+      { senderId: contactId, receiverId: myId, read: false },
+      { $set: { read: true } },
+    );
+
+    res.status(200).json({ message: "Messages marked as read" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
   }
 };
